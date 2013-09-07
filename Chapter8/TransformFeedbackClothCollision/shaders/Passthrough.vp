@@ -1,0 +1,10 @@
+#version 330
+precision highp float;
+
+in vec4 position_mass; 
+uniform mat4 MVP;
+
+void main(void) 
+{  
+	gl_Position = MVP*vec4(position_mass.xyz, 1.0);		
+}
