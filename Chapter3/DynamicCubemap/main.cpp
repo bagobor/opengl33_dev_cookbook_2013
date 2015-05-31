@@ -94,6 +94,11 @@ std::vector<GLushort> indices;
 float angle = 0; 
 
 float dx=-0.1f;	//direction 
+
+//delta time
+float dt = 0;
+//timing related variables
+float last_time = 0, current_time = 0;
  
 
 //constant colours array
@@ -305,22 +310,28 @@ void OnResize(int w, int h) {
 	//set the viewport size
 	glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 	//setup the projection matrix
-	P = glm::perspective(45.0f, (GLfloat)w/h, 0.1f, 1000.f);
+	P = glm::perspective(glm::radians(45.0f), (GLfloat)w/h, 0.1f, 1000.f);
 	//setup the cube map projection matrix
-	Pcubemap = glm::perspective(90.0f,1.0f,0.1f,1000.0f);
+	Pcubemap = glm::perspective(glm::radians(90.0f),1.0f,0.1f,1000.0f);
 }
 
 //idle event callback
 void OnIdle() {
+	//timing related calcualtion
+	last_time = current_time;
+	current_time = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+	dt = current_time - last_time;
+
 	//generate a new Y rotation matrix
-	Rot = glm::rotate(glm::mat4(1), angle++, glm::vec3(0,1,0));
+	angle += dt;
+	Rot = glm::rotate(glm::mat4(1), angle, glm::vec3(0,1,0));
 
 	//call display function
 	glutPostRedisplay();
 }
 
 //scene rendering function
-void DrawScene(glm::mat4 MView, glm::mat4 Proj ) {
+void DrawScene(const glm::mat4& MView, const glm::mat4& Proj ) {
 
 	//for each cube
 	for(int i=0;i<8;i++){

@@ -132,6 +132,10 @@ void OnInit() {
 		cout<<"Cannot load the 3ds mesh"<<endl;
 		exit(EXIT_FAILURE);
 	} 
+	if (vertices.empty() || indices.empty()) {
+		cout << "Cannot load the 3ds mesh" << endl;
+		exit(EXIT_FAILURE);
+	}
 	GL_CHECK_ERRORS
 
 	//store the loaded material names into a vector
@@ -339,7 +343,7 @@ void OnResize(int w, int h) {
 	//set the viewport
 	glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 	//setup the projection matrix
-	P = glm::perspective(60.0f,(float)w/h, 0.1f,1000.0f);
+	P = glm::perspective(glm::radians(60.0f),(float)w/h, 0.1f,1000.0f);
 }
 
 //display function

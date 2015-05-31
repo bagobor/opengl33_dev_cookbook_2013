@@ -1,27 +1,44 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// OpenGL Mathematics Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Created : 2011-01-15
-// Updated : 2011-09-13
-// Licence : This source is under MIT licence
-// File    : test/core/func_packing.cpp
-///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+/// OpenGL Mathematics (glm.g-truc.net)
+///
+/// Copyright (c) 2005 - 2015 G-Truc Creation (www.g-truc.net)
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+/// 
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+/// 
+/// Restrictions:
+///		By making use of the Software for military purposes, you choose to make
+///		a Bunny unhappy.
+/// 
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+/// THE SOFTWARE.
+///
+/// @file test/core/func_packing.cpp
+/// @date 2011-01-15 / 2011-09-13
+/// @author Christophe Riccio
+///////////////////////////////////////////////////////////////////////////////////
 
-#include <glm/glm.hpp>
-#include <glm/gtc/half_float.hpp>
 #include <glm/gtc/type_precision.hpp>
 #include <glm/gtc/epsilon.hpp>
+#include <glm/vector_relational.hpp>
+#include <glm/packing.hpp>
 #include <vector>
 
 int test_packUnorm2x16()
 {
 	int Error = 0;
-/*	
-	std::vector<glm::hvec2> A;
-	A.push_back(glm::hvec2(glm::half( 1.0f), glm::half( 0.0f)));
-	A.push_back(glm::hvec2(glm::half( 0.5f), glm::half( 0.7f)));
-	A.push_back(glm::hvec2(glm::half( 0.1f), glm::half( 0.2f)));
-*/
+
 	std::vector<glm::vec2> A;
 	A.push_back(glm::vec2(1.0f, 0.0f));
 	A.push_back(glm::vec2(0.5f, 0.7f));
@@ -42,12 +59,7 @@ int test_packUnorm2x16()
 int test_packSnorm2x16()
 {
 	int Error = 0;
-/*
-	std::vector<glm::hvec2> A;
-	A.push_back(glm::hvec2(glm::half( 1.0f), glm::half( 0.0f)));
-	A.push_back(glm::hvec2(glm::half(-0.5f), glm::half(-0.7f)));
-	A.push_back(glm::hvec2(glm::half(-0.1f), glm::half( 0.1f)));
-*/
+
 	std::vector<glm::vec2> A;
 	A.push_back(glm::vec2( 1.0f, 0.0f));
 	A.push_back(glm::vec2(-0.5f,-0.7f));
@@ -136,16 +148,16 @@ int test_packDouble2x32()
 {
 	int Error = 0;
 	
-	std::vector<glm::u32vec2> A;
-	A.push_back(glm::u32vec2( 1, 2));
-	A.push_back(glm::u32vec2(-1,-2));
-	A.push_back(glm::u32vec2(-1000, 1100));
+	std::vector<glm::uvec2> A;
+	A.push_back(glm::uvec2( 1, 2));
+	A.push_back(glm::uvec2(-1,-2));
+	A.push_back(glm::uvec2(-1000, 1100));
 	
 	for(std::size_t i = 0; i < A.size(); ++i)
 	{
-		glm::u32vec2 B(A[i]);
+		glm::uvec2 B(A[i]);
 		double C = glm::packDouble2x32(B);
-		glm::u32vec2 D = glm::unpackDouble2x32(C);
+		glm::uvec2 D = glm::unpackDouble2x32(C);
 		Error += B == D ? 0 : 1;
 		assert(!Error);
 	}

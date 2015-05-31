@@ -174,7 +174,7 @@ void OnShutdown() {
 void OnResize(int w, int h) {
 	glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 	//setup the projection matrix
-	P = glm::perspective(45.0f, (GLfloat)w/h, 0.1f, 1000.f);
+	P = glm::perspective(glm::radians(45.0f), (GLfloat)w/h, 0.1f, 1000.f);
 }
 
 void OnIdle() {

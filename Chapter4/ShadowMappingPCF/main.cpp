@@ -5,6 +5,7 @@
 
 #include <GL/freeglut.h>
 #include <iostream>
+#include <algorithm>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -447,7 +448,7 @@ void OnInit() {
 
 	//set the light MV, P and bias matrices
 	MV_L = glm::lookAt(lightPosOS,glm::vec3(0,0,0),glm::vec3(0,1,0));
-	P_L  = glm::perspective(50.0f,1.0f,1.0f, 25.0f);
+	P_L  = glm::perspective(glm::radians(50.0f),1.0f,1.0f, 25.0f);
 	B    = glm::scale(glm::translate(glm::mat4(1),glm::vec3(0.5,0.5,0.5)), glm::vec3(0.5,0.5,0.5));
 	BP   = B*P_L;
 	S    = BP*MV_L;
@@ -493,7 +494,7 @@ void OnResize(int w, int h) {
 	//set the viewport
 	glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 	//setup the projection matrix
-	P = glm::perspective(45.0f, (GLfloat)w/h, 0.1f, 1000.f);
+	P = glm::perspective(glm::radians(45.0f), (GLfloat)w/h, 0.1f, 1000.f);
 }
 
 //idle callback just calls the display function
@@ -502,7 +503,7 @@ void OnIdle() {
 }
 
 //scene rendering function
-void DrawScene(glm::mat4 View, glm::mat4 Proj, int isLightPass = 1) {
+void DrawScene(const glm::mat4& View, const glm::mat4& Proj, int isLightPass = 1) {
 
 	GL_CHECK_ERRORS
 

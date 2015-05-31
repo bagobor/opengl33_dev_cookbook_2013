@@ -9,6 +9,8 @@
 #include "..\src\GLSLShader.h"
 #include <fstream>
 
+#include <algorithm>
+
 #define GL_CHECK_ERRORS assert(glGetError()== GL_NO_ERROR);
 
 //for floating point inaccuracy
@@ -233,8 +235,8 @@ bool LoadVolume() {
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 4);
 
-		//allocate data with internal format and foramt as (GL_RED)		
-		glTexImage3D(GL_TEXTURE_3D,0,GL_RED,XDIM,YDIM,ZDIM,0,GL_RED,GL_UNSIGNED_BYTE,pData);
+		//allocate data with internal format and format as (GL_RED)		
+		glTexImage3D(GL_TEXTURE_3D,0,GL_R8,XDIM,YDIM,ZDIM,0,GL_RED,GL_UNSIGNED_BYTE,pData);
 		GL_CHECK_ERRORS
 
 		//generate mipmaps
@@ -681,7 +683,7 @@ void OnInit() {
 
 	//set the light MV, P and bias matrices
 	MV_L = glm::lookAt(lightPosOS,glm::vec3(0,0,0),glm::vec3(0,1,0));
-	P_L  = glm::perspective(45.0f,1.0f,1.0f, 200.0f);
+	P_L  = glm::perspective(glm::radians(45.0f),1.0f,1.0f, 200.0f);
 	B    = glm::scale(glm::translate(glm::mat4(1),glm::vec3(0.5,0.5,0.5)), glm::vec3(0.5,0.5,0.5));
 	BP   = B*P_L;
 	S    = BP*MV_L;
@@ -720,7 +722,7 @@ void OnResize(int w, int h) {
 	//set the viewport
 	glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 	//setup the projection matrix
-	P = glm::perspective(60.0f,(float)w/h, 0.1f,1000.0f);
+	P = glm::perspective(glm::radians(60.0f),(float)w/h, 0.1f,1000.0f);
 }
 //function to render slice from the point of view of eye in the eye buffer
 void DrawSliceFromEyePointOfView(const int i) {
@@ -768,7 +770,7 @@ void DrawSliceFromLightPointOfView(const int i) {
 }
 
 //function to render the slices into the light or the eye buffer
-void DrawSlices(glm::mat4 MVP) {
+void DrawSlices(const glm::mat4& MVP) {
 
 	GL_CHECK_ERRORS
 

@@ -1,43 +1,66 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// OpenGL Mathematics Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Created : 2010-09-16
-// Updated : 2011-05-25
-// Licence : This source is under MIT licence
-// File    : test/gtc/quaternion.cpp
-///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+/// OpenGL Mathematics (glm.g-truc.net)
+///
+/// Copyright (c) 2005 - 2015 G-Truc Creation (www.g-truc.net)
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+/// 
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+/// 
+/// Restrictions:
+///		By making use of the Software for military purposes, you choose to make
+///		a Bunny unhappy.
+/// 
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+/// THE SOFTWARE.
+///
+/// @file test/gtc/gtc_quaternion.cpp
+/// @date 2010-09-16 / 2014-11-25
+/// @author Christophe Riccio
+///////////////////////////////////////////////////////////////////////////////////
 
-#include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/epsilon.hpp>
+#include <glm/vector_relational.hpp>
+#include <vector>
 
 int test_quat_angle()
 {
 	int Error = 0;
 
 	{
-		glm::quat Q = glm::angleAxis(45.0f, glm::vec3(0, 0, 1));
+		glm::quat Q = glm::angleAxis(glm::pi<float>() * 0.25f, glm::vec3(0, 0, 1));
 		glm::quat N = glm::normalize(Q);
 		float L = glm::length(N);
 		Error += glm::epsilonEqual(L, 1.0f, 0.01f) ? 0 : 1;
 		float A = glm::angle(N);
-		Error += glm::epsilonEqual(A, 45.0f, 0.01f) ? 0 : 1;
+		Error += glm::epsilonEqual(A, glm::pi<float>() * 0.25f, 0.01f) ? 0 : 1;
 	}
 	{
-		glm::quat Q = glm::angleAxis(45.0f, glm::normalize(glm::vec3(0, 1, 1)));
+		glm::quat Q = glm::angleAxis(glm::pi<float>() * 0.25f, glm::normalize(glm::vec3(0, 1, 1)));
 		glm::quat N = glm::normalize(Q);
 		float L = glm::length(N);
 		Error += glm::epsilonEqual(L, 1.0f, 0.01f) ? 0 : 1;
 		float A = glm::angle(N);
-		Error += glm::epsilonEqual(A, 45.0f, 0.01f) ? 0 : 1;
+		Error += glm::epsilonEqual(A, glm::pi<float>() * 0.25f, 0.01f) ? 0 : 1;
 	}
 	{
-		glm::quat Q = glm::angleAxis(45.0f, glm::normalize(glm::vec3(1, 2, 3)));
+		glm::quat Q = glm::angleAxis(glm::pi<float>() * 0.25f, glm::normalize(glm::vec3(1, 2, 3)));
 		glm::quat N = glm::normalize(Q);
 		float L = glm::length(N);
 		Error += glm::epsilonEqual(L, 1.0f, 0.01f) ? 0 : 1;
 		float A = glm::angle(N);
-		Error += glm::epsilonEqual(A, 45.0f, 0.01f) ? 0 : 1;
+		Error += glm::epsilonEqual(A, glm::pi<float>() * 0.25f, 0.01f) ? 0 : 1;
 	}
 
 	return Error;
@@ -48,9 +71,9 @@ int test_quat_angleAxis()
 	int Error = 0;
 
 	glm::quat A = glm::angleAxis(0.0f, glm::vec3(0, 0, 1));
-	glm::quat B = glm::angleAxis(90.0f, glm::vec3(0, 0, 1));
+	glm::quat B = glm::angleAxis(glm::pi<float>() * 0.5f, glm::vec3(0, 0, 1));
 	glm::quat C = glm::mix(A, B, 0.5f);
-	glm::quat D = glm::angleAxis(45.0f, glm::vec3(0, 0, 1));
+	glm::quat D = glm::angleAxis(glm::pi<float>() * 0.25f, glm::vec3(0, 0, 1));
 
 	Error += glm::epsilonEqual(C.x, D.x, 0.01f) ? 0 : 1;
 	Error += glm::epsilonEqual(C.y, D.y, 0.01f) ? 0 : 1;
@@ -65,9 +88,9 @@ int test_quat_mix()
 	int Error = 0;
 
 	glm::quat A = glm::angleAxis(0.0f, glm::vec3(0, 0, 1));
-	glm::quat B = glm::angleAxis(90.0f, glm::vec3(0, 0, 1));
+	glm::quat B = glm::angleAxis(glm::pi<float>() * 0.5f, glm::vec3(0, 0, 1));
 	glm::quat C = glm::mix(A, B, 0.5f);
-	glm::quat D = glm::angleAxis(45.0f, glm::vec3(0, 0, 1));
+	glm::quat D = glm::angleAxis(glm::pi<float>() * 0.25f, glm::vec3(0, 0, 1));
 
 	Error += glm::epsilonEqual(C.x, D.x, 0.01f) ? 0 : 1;
 	Error += glm::epsilonEqual(C.y, D.y, 0.01f) ? 0 : 1;
@@ -92,19 +115,19 @@ int test_quat_normalize()
 	int Error(0);
 
 	{
-		glm::quat Q = glm::angleAxis(45.0f, glm::vec3(0, 0, 1));
+		glm::quat Q = glm::angleAxis(glm::pi<float>() * 0.25f, glm::vec3(0, 0, 1));
 		glm::quat N = glm::normalize(Q);
 		float L = glm::length(N);
 		Error += glm::epsilonEqual(L, 1.0f, 0.000001f) ? 0 : 1;
 	}
 	{
-		glm::quat Q = glm::angleAxis(45.0f, glm::vec3(0, 0, 2));
+		glm::quat Q = glm::angleAxis(glm::pi<float>() * 0.25f, glm::vec3(0, 0, 2));
 		glm::quat N = glm::normalize(Q);
 		float L = glm::length(N);
 		Error += glm::epsilonEqual(L, 1.0f, 0.000001f) ? 0 : 1;
 	}
 	{
-		glm::quat Q = glm::angleAxis(45.0f, glm::vec3(1, 2, 3));
+		glm::quat Q = glm::angleAxis(glm::pi<float>() * 0.25f, glm::vec3(1, 2, 3));
 		glm::quat N = glm::normalize(Q);
 		float L = glm::length(N);
 		Error += glm::epsilonEqual(L, 1.0f, 0.000001f) ? 0 : 1;
@@ -131,14 +154,6 @@ int test_quat_euler()
 		double Pitch = glm::pitch(q);
 		double Yaw = glm::yaw(q);
 		glm::dvec3 Angles = glm::eulerAngles(q);
-	}
-
-	{
-		glm::hquat q(glm::half(1.0f), glm::half(0.0f), glm::half(0.0f), glm::half(1.0f));
-		glm::half Roll = glm::roll(q);
-		glm::half Pitch = glm::pitch(q);
-		glm::half Yaw = glm::yaw(q);
-		glm::hvec3 Angles = glm::eulerAngles(q);
 	}
 
 	return Error;
@@ -178,7 +193,7 @@ int test_quat_slerp()
 	// certainly not a 135° rotation
 	glm::quat Y45rot3 = glm::slerp(id , -Y90rot, 0.5f);
 	float Y45angle3 = glm::angle(Y45rot3);
-	Error += glm::epsilonEqual(Y45angle3, 45.f, Epsilon) ? 0 : 1;
+	Error += glm::epsilonEqual(Y45angle3, glm::pi<float>() * 0.25f, Epsilon) ? 0 : 1;
 	Error += glm::all(glm::epsilonEqual(Ym45rot2, Y45rot3, Epsilon)) ? 0 : 1;
 
 	// Same, but inverted
@@ -196,11 +211,60 @@ int test_quat_slerp()
 	// Must be 90° rotation on almost any axis that is on the XZ plane
 	glm::quat XZ90rot = glm::slerp(id, -Y90rot, 0.5f);
 	float XZ90angle = glm::angle(XZ90rot); // Must be PI/4 = 0.78;
-	Error += glm::epsilonEqual(XZ90angle, 45.f, Epsilon) ? 0 : 1;
+	Error += glm::epsilonEqual(XZ90angle, glm::pi<float>() * 0.25f, Epsilon) ? 0 : 1;
 
 	// Testing almost equal quaternions (this test should pass through the linear interpolation)
 	// Must be 0 0.00X 0 0.99999
-	glm::quat almostid = glm::slerp(id, glm::angleAxis(0.1f, 0.0f, 1.0f, 0.0f), 0.5f);
+	glm::quat almostid = glm::slerp(id, glm::angleAxis(0.1f, glm::vec3(0.0f, 1.0f, 0.0f)), 0.5f);
+
+	// Testing quaternions with opposite sign
+	{
+		glm::quat a(-1, 0, 0, 0);
+
+		glm::quat result = glm::slerp(a, id, 0.5f);
+
+		Error += glm::epsilonEqual(glm::pow(glm::dot(id, result), 2.f), 1.f, 0.01f) ? 0 : 1;
+	}
+
+	return Error;
+}
+
+int test_quat_mul()
+{
+	int Error(0);
+
+	glm::quat temp1 = glm::normalize(glm::quat(1.0f, glm::vec3(0.0, 1.0, 0.0)));
+	glm::quat temp2 = glm::normalize(glm::quat(0.5f, glm::vec3(1.0, 0.0, 0.0)));
+
+	glm::vec3 transformed0 = (temp1 * glm::vec3(0.0, 1.0, 0.0) * glm::inverse(temp1));
+	glm::vec3 temp4 = temp2 * transformed0 * glm::inverse(temp2);
+
+	glm::quat temp5 = glm::normalize(temp1 * temp2);
+	glm::vec3 temp6 = temp5 * glm::vec3(0.0, 1.0, 0.0) * glm::inverse(temp5);
+
+	{
+		glm::quat temp7;
+
+		temp7 *= temp5;
+		temp7 *= glm::inverse(temp5);
+
+		Error += temp7 != glm::quat();
+	}
+
+	return Error;
+}
+
+int test_quat_two_axis_ctr()
+{
+	int Error(0);
+
+	glm::quat q1(glm::vec3(1, 0, 0), glm::vec3(0, 1, 0));
+	glm::vec3 v1 = q1 * glm::vec3(1, 0, 0);
+	Error += glm::all(glm::epsilonEqual(v1, glm::vec3(0, 1, 0), 0.0001f)) ? 0 : 1;
+
+	glm::quat q2 = q1 * q1;
+	glm::vec3 v2 = q2 * glm::vec3(1, 0, 0);
+	Error += glm::all(glm::epsilonEqual(v2, glm::vec3(-1, 0, 0), 0.0001f)) ? 0 : 1;
 
 	return Error;
 }
@@ -213,10 +277,57 @@ int test_quat_type()
 	return 0;
 }
 
+int test_quat_mul_vec()
+{
+	int Error(0);
+
+	glm::quat q = glm::angleAxis(glm::pi<float>() * 0.5f, glm::vec3(0, 0, 1));
+	glm::vec3 v(1, 0, 0);
+	glm::vec3 u(q * v);
+	glm::vec3 w(u * q);
+
+	Error += glm::all(glm::epsilonEqual(v, w, 0.01f)) ? 0 : 1;
+
+	return Error;
+}
+
+int test_quat_ctr()
+{
+	int Error(0);
+
+#	if GLM_HAS_TRIVIAL_QUERIES
+	//	Error += std::is_trivially_default_constructible<glm::quat>::value ? 0 : 1;
+	//	Error += std::is_trivially_default_constructible<glm::dquat>::value ? 0 : 1;
+	//	Error += std::is_trivially_copy_assignable<glm::quat>::value ? 0 : 1;
+	//	Error += std::is_trivially_copy_assignable<glm::dquat>::value ? 0 : 1;
+		Error += std::is_trivially_copyable<glm::quat>::value ? 0 : 1;
+		Error += std::is_trivially_copyable<glm::dquat>::value ? 0 : 1;
+
+		Error += std::is_copy_constructible<glm::quat>::value ? 0 : 1;
+		Error += std::is_copy_constructible<glm::dquat>::value ? 0 : 1;
+#	endif
+
+#	if GLM_HAS_INITIALIZER_LISTS
+	{
+		glm::quat A{0, 1, 2, 3};
+
+		std::vector<glm::quat> B{
+			{0, 1, 2, 3},
+			{0, 1, 2, 3}};
+	}
+#	endif//GLM_HAS_INITIALIZER_LISTS
+
+	return Error;
+}
+
 int main()
 {
 	int Error(0);
 
+	Error += test_quat_ctr();
+	Error += test_quat_mul_vec();
+	Error += test_quat_two_axis_ctr();
+	Error += test_quat_mul();
 	Error += test_quat_precision();
 	Error += test_quat_type();
 	Error += test_quat_angle();

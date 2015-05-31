@@ -1,15 +1,42 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// OpenGL Mathematics Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Created : 2008-08-31
-// Updated : 2008-08-31
-// Licence : This source is under MIT License
-// File    : test/core/type_vec4.cpp
-///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+/// OpenGL Mathematics (glm.g-truc.net)
+///
+/// Copyright (c) 2005 - 2015 G-Truc Creation (www.g-truc.net)
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+/// 
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+/// 
+/// Restrictions:
+///		By making use of the Software for military purposes, you choose to make
+///		a Bunny unhappy.
+/// 
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+/// THE SOFTWARE.
+///
+/// @file test/core/core_type_vec4.cpp
+/// @date 2008-08-31 / 2014-11-25
+/// @author Christophe Riccio
+///////////////////////////////////////////////////////////////////////////////////
 
+//#define GLM_FORCE_AVX2
 #define GLM_SWIZZLE
-#include <glm/glm.hpp>
-#include <glm/gtc/half_float.hpp>
+#include <glm/vector_relational.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <cstdio>
+#include <ctime>
 #include <vector>
 
 template <int Value>
@@ -33,20 +60,77 @@ enum comp
 //	return _mm_shuffle_ps(Src, Src, mask<(int(W) << 6) | (int(Z) << 4) | (int(Y) << 2) | (int(X) << 0)>::value);
 //}
 
-int test_hvec4()
-{
-	glm::hvec4 const A = glm::hvec4(0, 1, 2, 3);
-	//glm::hvec4 B = glm::swizzle<glm::X, glm::Y, glm::Z, glm::W>(A);
-
-	//glm::vec4 B = glm::detail::tvec##(glm::vec4::_size)<float>();
-
-	return 0;
-}
 
 int test_vec4_ctor()
 {
 	int Error = 0;
-	
+
+	{
+		glm::ivec4 A(1, 2, 3, 4);
+		glm::ivec4 B(A);
+		Error += glm::all(glm::equal(A, B)) ? 0 : 1;
+	}
+
+#	if GLM_HAS_TRIVIAL_QUERIES
+	//	Error += std::is_trivially_default_constructible<glm::vec4>::value ? 0 : 1;
+	//	Error += std::is_trivially_copy_assignable<glm::vec4>::value ? 0 : 1;
+		Error += std::is_trivially_copyable<glm::vec4>::value ? 0 : 1;
+		Error += std::is_trivially_copyable<glm::dvec4>::value ? 0 : 1;
+		Error += std::is_trivially_copyable<glm::ivec4>::value ? 0 : 1;
+		Error += std::is_trivially_copyable<glm::uvec4>::value ? 0 : 1;
+
+		Error += std::is_copy_constructible<glm::vec4>::value ? 0 : 1;
+#	endif
+
+#if GLM_HAS_INITIALIZER_LISTS
+	{
+		glm::vec4 a{ 0, 1, 2, 3 };
+		std::vector<glm::vec4> v = {
+			{0, 1, 2, 3},
+			{4, 5, 6, 7},
+			{8, 9, 0, 1}};
+	}
+
+	{
+		glm::dvec4 a{ 0, 1, 2, 3 };
+		std::vector<glm::dvec4> v = {
+			{0, 1, 2, 3},
+			{4, 5, 6, 7},
+			{8, 9, 0, 1}};
+	}
+#endif
+
+#if GLM_HAS_ANONYMOUS_UNION && defined(GLM_SWIZZLE)
+	{
+		glm::vec4 A = glm::vec4(1.0f, 2.0f, 3.0f, 4.0f);
+		glm::vec4 B = A.xyzw;
+		glm::vec4 C(A.xyzw);
+		glm::vec4 D(A.xyzw());
+		glm::vec4 E(A.x, A.yzw);
+		glm::vec4 F(A.x, A.yzw());
+		glm::vec4 G(A.xyz, A.w);
+		glm::vec4 H(A.xyz(), A.w);
+		glm::vec4 I(A.xy, A.zw);
+		glm::vec4 J(A.xy(), A.zw());
+		glm::vec4 K(A.x, A.y, A.zw);
+		glm::vec4 L(A.x, A.yz, A.w);
+		glm::vec4 M(A.xy, A.z, A.w);
+
+		Error += glm::all(glm::equal(A, B)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, C)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, D)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, E)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, F)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, G)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, H)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, I)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, J)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, K)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, L)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, M)) ? 0 : 1;
+	}
+#endif// GLM_HAS_ANONYMOUS_UNION && defined(GLM_SWIZZLE)
+
 	{
 		glm::vec4 A(1);
 		glm::vec4 B(1, 1, 1, 1);
@@ -166,6 +250,12 @@ int test_vec4_operators()
 		B /= 2.0f;
 		Error += B == glm::vec4(2, 1.25, 1, 7.0f / 4.0f / 2.0f) ? 0 : 1;
 	}
+	{
+		glm::vec4 B(2.0f);
+
+		B /= B.y;
+		Error += B == glm::vec4(1.0f) ? 0 : 1;
+	}
 
 	{
 		glm::vec4 A(1.0f, 2.0f, 3.0f, 4.0f);
@@ -182,7 +272,8 @@ int test_vec4_operators()
 	{
 		glm::vec4 A(1.0f, 2.0f, 3.0f, 4.0f);
 		glm::vec4 B = A--;
-		Error += B == glm::vec4(0.0f, 1.0f, 2.0f, 3.0f) ? 0 : 1;
+		Error += B == glm::vec4(1.0f, 2.0f, 3.0f, 4.0f) ? 0 : 1;
+		Error += A == glm::vec4(0.0f, 1.0f, 2.0f, 3.0f) ? 0 : 1;
 	}
 
 	{
@@ -194,7 +285,8 @@ int test_vec4_operators()
 	{
 		glm::vec4 A(1.0f, 2.0f, 3.0f, 4.0f);
 		glm::vec4 B = A++;
-		Error += B == glm::vec4(2.0f, 3.0f, 4.0f, 5.0f) ? 0 : 1;
+		Error += B == glm::vec4(1.0f, 2.0f, 3.0f, 4.0f) ? 0 : 1;
+		Error += A == glm::vec4(2.0f, 3.0f, 4.0f, 5.0f) ? 0 : 1;
 	}
 
 	return Error;
@@ -204,10 +296,14 @@ int test_vec4_size()
 {
 	int Error = 0;
 	
+	Error += sizeof(glm::vec4) == sizeof(glm::lowp_vec4) ? 0 : 1;
 	Error += sizeof(glm::vec4) == sizeof(glm::mediump_vec4) ? 0 : 1;
+	Error += sizeof(glm::vec4) == sizeof(glm::highp_vec4) ? 0 : 1;
 	Error += 16 == sizeof(glm::mediump_vec4) ? 0 : 1;
-	Error += sizeof(glm::dvec4) == sizeof(glm::highp_vec4) ? 0 : 1;
-	Error += 32 == sizeof(glm::highp_vec4) ? 0 : 1;
+	Error += sizeof(glm::dvec4) == sizeof(glm::lowp_dvec4) ? 0 : 1;
+	Error += sizeof(glm::dvec4) == sizeof(glm::mediump_dvec4) ? 0 : 1;
+	Error += sizeof(glm::dvec4) == sizeof(glm::highp_dvec4) ? 0 : 1;
+	Error += 32 == sizeof(glm::highp_dvec4) ? 0 : 1;
 	Error += glm::vec4().length() == 4 ? 0 : 1;
 	Error += glm::dvec4().length() == 4 ? 0 : 1;
 	
@@ -220,7 +316,7 @@ int test_vec4_swizzle_partial()
 
 	glm::vec4 A(1, 2, 3, 4);
 
-#if(GLM_SUPPORT_SWIZZLE_OPERATOR())
+#	if GLM_HAS_ANONYMOUS_UNION && defined(GLM_SWIZZLE_RELAX)
 	{
 		glm::vec4 B(A.xy, A.zw);
 		Error += A == B ? 0 : 1;
@@ -246,22 +342,123 @@ int test_vec4_swizzle_partial()
 		glm::vec4 B(1.0f, A.yzw);
 		Error += A == B ? 0 : 1;
 	}
-#endif//(GLM_SUPPORT_SWIZZLE_OPERATOR())
+#	endif
+
+	return Error;
+}
+
+int test_operator_increment()
+{
+	int Error(0);
+
+	glm::ivec4 v0(1);
+	glm::ivec4 v1(v0);
+	glm::ivec4 v2(v0);
+	glm::ivec4 v3 = ++v1;
+	glm::ivec4 v4 = v2++;
+
+	Error += glm::all(glm::equal(v0, v4)) ? 0 : 1;
+	Error += glm::all(glm::equal(v1, v2)) ? 0 : 1;
+	Error += glm::all(glm::equal(v1, v3)) ? 0 : 1;
+
+	int i0(1);
+	int i1(i0);
+	int i2(i0);
+	int i3 = ++i1;
+	int i4 = i2++;
+
+	Error += i0 == i4 ? 0 : 1;
+	Error += i1 == i2 ? 0 : 1;
+	Error += i1 == i3 ? 0 : 1;
+
+	return Error;
+}
+
+struct AoS
+{
+	glm::vec4 A;
+	glm::vec3 B;
+	glm::vec3 C;
+	glm::vec2 D;
+};
+
+int test_vec4_perf_AoS(std::size_t Size)
+{
+	int Error(0);
+
+	std::vector<AoS> In;
+	std::vector<AoS> Out;
+	In.resize(Size);
+	Out.resize(Size);
+
+	std::clock_t StartTime = std::clock();
+
+	for(std::size_t i = 0; i < In.size(); ++i)
+		Out[i] = In[i];
+
+	std::clock_t EndTime = std::clock();
+
+  std::printf("AoS: %d\n", EndTime - StartTime);
+
+	return Error;
+}
+
+int test_vec4_perf_SoA(std::size_t Size)
+{
+	int Error(0);
+
+	std::vector<glm::vec4> InA;
+	std::vector<glm::vec3> InB;
+	std::vector<glm::vec3> InC;
+	std::vector<glm::vec2> InD;
+	std::vector<glm::vec4> OutA;
+	std::vector<glm::vec3> OutB;
+	std::vector<glm::vec3> OutC;
+	std::vector<glm::vec2> OutD;
+
+	InA.resize(Size);
+	InB.resize(Size);
+	InC.resize(Size);
+	InD.resize(Size);
+	OutA.resize(Size);
+	OutB.resize(Size);
+	OutC.resize(Size);
+	OutD.resize(Size);
+
+	std::clock_t StartTime = std::clock();
+
+	for(std::size_t i = 0; i < InA.size(); ++i)
+	{
+		OutA[i] = InA[i];
+		OutB[i] = InB[i];
+		OutC[i] = InC[i];
+		OutD[i] = InD[i];
+	}
+
+	std::clock_t EndTime = std::clock();
+
+	std::printf("SoA: %d\n", EndTime - StartTime);
 
 	return Error;
 }
 
 int main()
 {
-	//__m128 DataA = swizzle<X, Y, Z, W>(glm::vec4(1.0f, 2.0f, 3.0f, 4.0f));
-	//__m128 DataB = swizzle<W, Z, Y, X>(glm::vec4(1.0f, 2.0f, 3.0f, 4.0f));
+	int Error(0);
 
-	int Error = 0;
+	std::size_t const Size(1000000);
+
+#	ifdef NDEBUG
+		Error += test_vec4_perf_AoS(Size);
+		Error += test_vec4_perf_SoA(Size);
+#	endif//NDEBUG
+
 	Error += test_vec4_ctor();
 	Error += test_vec4_size();
 	Error += test_vec4_operators();
-	Error += test_hvec4();
-    Error += test_vec4_swizzle_partial();
+	Error += test_vec4_swizzle_partial();
+	Error += test_operator_increment();
+
 	return Error;
 }
 

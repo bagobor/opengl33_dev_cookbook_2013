@@ -50,7 +50,7 @@ bool VolumeSplatter::LoadVolume(const std::string& filename) {
 	}
 } 
 
-void VolumeSplatter::SampleVoxel(const int x, const int y, const int z) {
+void VolumeSplatter::SampleVoxel(const unsigned int x, const unsigned int y, const unsigned int z) {
 	GLubyte data = SampleVolume(x, y, z);
 	if(data>isoValue) {
 		Vertex v; 
@@ -65,13 +65,16 @@ void VolumeSplatter::SampleVoxel(const int x, const int y, const int z) {
 
 void VolumeSplatter::SplatVolume() {
 	vertices.clear(); 
-	int dx = XDIM/X_SAMPLING_DIST;
-	int dy = YDIM/Y_SAMPLING_DIST;
-	int dz = ZDIM/Z_SAMPLING_DIST;
+	const unsigned int dx = XDIM/X_SAMPLING_DIST;
+	const unsigned int dy = YDIM/Y_SAMPLING_DIST;
+	const unsigned int dz = ZDIM/Z_SAMPLING_DIST;
+
+	vertices.reserve((X_SAMPLING_DIST + 1)*(Y_SAMPLING_DIST + 1)*(Z_SAMPLING_DIST + 1));
+
 	scale = glm::vec3(dx,dy,dz); 
-	for(int z=0;z<ZDIM;z+=dz) {
-		for(int y=0;y<YDIM;y+=dy) {
-			for(int x=0;x<XDIM;x+=dx) {
+	for(unsigned int z=0;z<ZDIM;z+=dz) {
+		for(unsigned int y=0;y<YDIM;y+=dy) {
+			for(unsigned int x=0;x<XDIM;x+=dx) {
 				SampleVoxel(x,y,z);
 			}
 		}

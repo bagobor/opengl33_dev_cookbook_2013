@@ -10,6 +10,8 @@
 
 #include "GLSLShader.h"
 
+#include <algorithm>
+
 #define GL_CHECK_ERRORS assert(glGetError()== GL_NO_ERROR);
 
 #ifdef _DEBUG 
@@ -21,6 +23,8 @@
 #pragma comment(lib, "freeglut_static_x86.lib")
 #pragma comment(lib, "SOIL_static_x86.lib")
 #endif
+
+
 
 using namespace std;
 
@@ -196,7 +200,7 @@ void OnResize(int w, int h) {
 	glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 
 	//setup the projection matrix
-	P = glm::perspective(45.0f, (GLfloat)w/h, 0.01f, 10000.f);
+	P = glm::perspective(glm::radians(45.0f), (GLfloat)w/h, 0.01f, 10000.f);
 }
 
 //display callback function

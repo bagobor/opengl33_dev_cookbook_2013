@@ -8,8 +8,9 @@
 
 #include "..\src\GLSLShader.h"
 #include <fstream>
+#include <algorithm>
 
-#define GL_CHECK_ERRORS assert(glGetError()== GL_NO_ERROR);
+#define GL_CHECK_ERRORS {GLenum err = glGetError(); if (err != GL_NO_ERROR) {const char *s = (const char *)gluErrorString(err); printf("GL ERROR: %s",  s);} assert(err == GL_NO_ERROR);}
 
 //for floating point inaccuracy
 const float EPSILON = 0.0001f;
@@ -129,7 +130,8 @@ bool LoadVolume() {
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 4);
 
 		//allocate data with internal format and foramt as (GL_RED)		
-		glTexImage3D(GL_TEXTURE_3D,0,GL_RED,XDIM,YDIM,ZDIM,0,GL_RED,GL_UNSIGNED_BYTE,pData);
+		//glTexImage3D(GL_TEXTURE_3D,0,GL_LUMINANCE,XDIM,YDIM,ZDIM,0,GL_LUMINANCE,GL_UNSIGNED_BYTE,pData);
+		glTexImage3D(GL_TEXTURE_3D,0,GL_R8,XDIM,YDIM,ZDIM,0,GL_RED,GL_UNSIGNED_BYTE,pData);
 		GL_CHECK_ERRORS
 
 		//generate mipmaps
@@ -442,7 +444,7 @@ void OnResize(int w, int h) {
 	//setup the viewport
 	glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 	//setup the projection matrix
-	P = glm::perspective(60.0f,(float)w/h, 0.1f,1000.0f);
+	P = glm::perspective(glm::radians(60.0f),(float)w/h, 0.1f,1000.0f);
 }
 
 //display function

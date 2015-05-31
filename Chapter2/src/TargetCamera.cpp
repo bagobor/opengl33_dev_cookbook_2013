@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <glm/gtx/euler_angles.hpp>
+#include <algorithm>
 
 CTargetCamera::CTargetCamera(void)
 {  
@@ -37,18 +38,6 @@ void CTargetCamera::SetTarget(const glm::vec3 tgt) {
 	target = tgt; 
 	distance = glm::distance(position, target);
 	distance = std::max(minDistance, std::min(distance, maxDistance));
-	/*V = glm::lookAt(position, target, up);
-
-	m_yaw = 0;
-	m_pitch = 0;
-
-	if(V[0][0] < 0)
-		m_yaw = glm::degrees((float)(M_PI - asinf(-V[2][0])) );
-	else
-		m_yaw = glm::degrees(asinf(-V[2][0]));
-
-	m_pitch = glm::degrees(asinf(-V[1][2]));  
-	*/
 }
 
 const glm::vec3 CTargetCamera::GetTarget() const {

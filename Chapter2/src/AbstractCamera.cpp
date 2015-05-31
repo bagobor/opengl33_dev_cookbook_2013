@@ -15,7 +15,7 @@ CAbstractCamera::~CAbstractCamera(void)
 }
 
 void CAbstractCamera::SetupProjection(const float fovy, const float aspRatio, const float nr, const float fr) {
-	P = glm::perspective(fovy, aspRatio, nr, fr); 
+	P = glm::perspective(glm::radians(fovy), aspRatio, nr, fr); 
 	Znear = nr;
 	Zfar = fr;
 	fov = fovy;
@@ -43,7 +43,7 @@ const float CAbstractCamera::GetFOV() const {
 } 
 void CAbstractCamera::SetFOV(const float fovInDegrees) {
 	fov = fovInDegrees;
-	P = glm::perspective(fovInDegrees, aspect_ratio, Znear, Zfar); 
+	P = glm::perspective(glm::radians(fovInDegrees), aspect_ratio, Znear, Zfar); 
 }
 const float CAbstractCamera::GetAspectRatio() const {
 	return aspect_ratio;

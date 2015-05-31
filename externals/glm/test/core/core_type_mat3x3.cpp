@@ -1,15 +1,40 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// OpenGL Mathematics Copyright (c) 2005 - 2013 G-Truc Creation (www.g-truc.net)
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Created : 2008-08-31
-// Updated : 2008-08-31
-// Licence : This source is under MIT License
-// File    : test/core/type_mat3x3.cpp
-///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+/// OpenGL Mathematics (glm.g-truc.net)
+///
+/// Copyright (c) 2005 - 2015 G-Truc Creation (www.g-truc.net)
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+/// 
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+/// 
+/// Restrictions:
+///		By making use of the Software for military purposes, you choose to make
+///		a Bunny unhappy.
+/// 
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+/// THE SOFTWARE.
+///
+/// @file test/core/core_type_mat3x3.cpp
+/// @date 2008-08-31 / 2014-11-25
+/// @author Christophe Riccio
+///////////////////////////////////////////////////////////////////////////////////
 
-#include <glm/glm.hpp>
 #include <glm/gtc/epsilon.hpp>
+#include <glm/matrix.hpp>
+#include <glm/vector_relational.hpp>
+#include <glm/mat3x3.hpp>
 #include <cstdio>
+#include <vector>
 
 void print(glm::dmat3 const & Mat0)
 {
@@ -86,10 +111,57 @@ int test_inverse()
 	return Error;
 }
 
+int test_ctr()
+{
+	int Error(0);
+	
+#if(GLM_HAS_INITIALIZER_LISTS)
+	glm::mat3x3 m0(
+		glm::vec3(0, 1, 2),
+		glm::vec3(3, 4, 5),
+		glm::vec3(6, 7, 8));
+	
+	glm::mat3x3 m1{0, 1, 2, 3, 4, 5, 6, 7, 8};
+	
+	glm::mat3x3 m2{
+		{0, 1, 2},
+		{3, 4, 5},
+		{6, 7, 8}};
+	
+	for(glm::length_t i = 0; i < m0.length(); ++i)
+		Error += glm::all(glm::equal(m0[i], m2[i])) ? 0 : 1;
+	
+	for(glm::length_t i = 0; i < m1.length(); ++i)
+		Error += glm::all(glm::equal(m1[i], m2[i])) ? 0 : 1;
+	
+	std::vector<glm::mat3x3> v1{
+		{0, 1, 2, 3, 4, 5, 6, 7, 8},
+		{0, 1, 2, 3, 4, 5, 6, 7, 8}
+	};
+	
+	std::vector<glm::mat3x3> v2{
+		{
+			{ 0, 1, 2},
+			{ 3, 4, 5},
+			{ 6, 7, 8}
+		},
+		{
+			{ 0, 1, 2},
+			{ 3, 4, 5},
+			{ 6, 7, 8}
+		}
+	};
+	
+#endif//GLM_HAS_INITIALIZER_LISTS
+	
+	return Error;
+}
+
 int main()
 {
 	int Error = 0;
 
+	Error += test_ctr();
 	Error += test_mat3x3();
 	Error += test_operators();
 	Error += test_inverse();

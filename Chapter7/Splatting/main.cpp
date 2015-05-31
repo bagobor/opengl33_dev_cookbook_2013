@@ -10,7 +10,8 @@
 #include "..\src\GLSLShader.h"
 #include <fstream>
 
-#define GL_CHECK_ERRORS assert(glGetError()== GL_NO_ERROR);
+//#define GL_CHECK_ERRORS assert(glGetError()== GL_NO_ERROR);
+#define GL_CHECK_ERRORS {GLenum err = glGetError(); if (err != GL_NO_ERROR) {const char *s = (const char *)gluErrorString(err); printf("GL ERROR: %s",  s);} assert(err == GL_NO_ERROR);}
 
 
 #ifdef _DEBUG 
@@ -362,7 +363,7 @@ void OnResize(int w, int h) {
 	//set the viewport
 	glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 	//setup the projection matrix
-	P = glm::perspective(60.0f,(float)w/h, 0.1f,1000.0f);
+	P = glm::perspective(glm::radians(60.0f),(float)w/h, 0.1f,1000.0f);
 }
 
 //display callback function

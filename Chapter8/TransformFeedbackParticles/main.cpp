@@ -393,7 +393,7 @@ void OnReshape(int nw, int nh) {
 	glViewport(0,0,nw, nh);
 
 	//get the perspective projection matrix
-	mP = glm::perspective(60.0f, (GLfloat)nw/nh, 1.0f, 100.f);
+	mP = glm::perspective(glm::radians(60.0f), (GLfloat)nw/nh, 1.0f, 100.f);
   
 }
 

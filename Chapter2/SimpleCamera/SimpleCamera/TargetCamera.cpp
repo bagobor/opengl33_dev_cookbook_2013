@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <glm/gtx/euler_angles.hpp>
+#include <algorithm>
 
 CTargetCamera::CTargetCamera(void)
 {  

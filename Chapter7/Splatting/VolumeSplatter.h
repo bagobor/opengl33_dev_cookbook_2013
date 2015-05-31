@@ -48,7 +48,7 @@ protected:
 	glm::vec3 GetNormal(const int x, const int y, const int z);
 
 	//samples a voxel at the given location
-	void SampleVoxel(const int x, const int y, const int z); 
+	void SampleVoxel(const unsigned int x, const unsigned int y, const unsigned int z); 
 
 	//the volume dataset dimensions and inverse volume dimensions
 	int XDIM, YDIM, ZDIM;

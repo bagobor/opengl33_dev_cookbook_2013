@@ -13,7 +13,7 @@ CAbstractCamera::~CAbstractCamera(void)
 }
 
 void CAbstractCamera::SetupProjection(const float fovy, const float aspRatio) {
-	P = glm::perspective(fovy, aspRatio, 0.1f, 1000.0f); 
+	P = glm::perspective(glm::radians(fovy), aspRatio, 0.1f, 1000.0f); 
 	fov = fovy;
 	aspect_ratio = aspRatio;
 } 

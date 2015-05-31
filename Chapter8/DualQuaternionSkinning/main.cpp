@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <iostream>
+#include <algorithm>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -221,6 +222,10 @@ void OnInit() {
 	//load the EZmesh file
 	if(!ezm.Load(mesh_filename.c_str(), skeleton, animations, submeshes, vertices, indices, material2ImageMap, min, max)) {
 		cout<<"Cannot load the EZMesh file"<<endl;
+		exit(EXIT_FAILURE);
+	}
+	if (vertices.empty()) {
+		cout << "Cannot load the EZMesh file" << endl;
 		exit(EXIT_FAILURE);
 	}
 
@@ -490,7 +495,7 @@ void OnResize(int w, int h) {
 	//set the viewport
 	glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 	//setup the projection matrix
-	P = glm::perspective(60.0f,(float)w/h, 0.1f,1000.0f);
+	P = glm::perspective(glm::radians(60.0f),(float)w/h, 0.1f,1000.0f);
 }
 
 //display function

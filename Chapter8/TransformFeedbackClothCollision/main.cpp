@@ -187,7 +187,7 @@ float fRadius = 1;
 int total_sphere_indices=0;
 
 //converts vec4 to vec3
-glm::vec3 vec3(glm::vec4 v) {
+glm::vec3 vec3(const glm::vec4& v) {
 	return glm::vec3(v.x, v.y, v.z);
 }
 
@@ -558,7 +558,7 @@ void DrawCloth()
 }
 
 //renders sphere using the render shader
-void DrawSphere(glm::mat4 mvp) {
+void DrawSphere(const glm::mat4& mvp) {
 	renderShader.Use();
 		glBindVertexArray(sphereVAOID);
 		glUniformMatrix4fv(renderShader("MVP"), 1, GL_FALSE, glm::value_ptr(mvp));
@@ -810,7 +810,7 @@ void OnReshape(int nw, int nh) {
 	glViewport(0,0,nw, nh);
 
 	//set the projection matrix
-	mP = glm::perspective(60.0f, (GLfloat)nw/nh, 1.0f, 100.f);
+	mP = glm::perspective(glm::radians(60.0f), (GLfloat)nw/nh, 1.0f, 100.f);
 	for(int j=0;j<4;j++)
 		for(int i=0;i<4;i++)
 			P[i+j*4] = mP[j][i] ;

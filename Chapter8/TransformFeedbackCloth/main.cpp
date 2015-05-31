@@ -174,7 +174,7 @@ GLuint clothVAOID, clothVBOVerticesID, clothVBOIndicesID;
 GLuint tfID;
 
 //converts vec4 to vec3
-glm::vec3 vec3(glm::vec4 v) {
+glm::vec3 vec3(const glm::vec4& v) {
 	return glm::vec3(v.x, v.y, v.z);
 }
  
@@ -683,7 +683,7 @@ void OnReshape(int nw, int nh) {
 	glViewport(0,0,nw, nh);
 
 	//set the projection matrix
-	mP = glm::perspective(60.0f, (GLfloat)nw/nh, 1.0f, 100.f);
+	mP = glm::perspective(glm::radians(60.0f), (GLfloat)nw/nh, 1.0f, 100.f);
 	for(int j=0;j<4;j++)
 		for(int i=0;i<4;i++)
 			P[i+j*4] = mP[j][i] ;

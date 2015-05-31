@@ -331,7 +331,7 @@ void OnResize(int w, int h) {
 	//set the viewport
 	glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 	//setup the projection matrix
-	P = glm::perspective(45.0f, (GLfloat)w/h, 0.1f, 1000.f);
+	P = glm::perspective(glm::radians(45.0f), (GLfloat)w/h, 0.1f, 1000.f);
 }
 
 //idle callback just calls the display function
@@ -340,7 +340,7 @@ void OnIdle() {
 }
 
 //scene rendering function
-void DrawScene(glm::mat4 View, glm::mat4 Proj ) {
+void DrawScene(const glm::mat4& View, const glm::mat4& Proj ) {
 
 	GL_CHECK_ERRORS
 

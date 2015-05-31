@@ -47,9 +47,6 @@ const int VK_Z = 0x5a;
 const float EPSILON = 0.001f;
 const float EPSILON2 = EPSILON*EPSILON;
 
-//delta time
-float dt = 0;
-
 //Free camera instance
 CFreeCamera cam;
 
@@ -69,6 +66,9 @@ CUnitCube* cube;
 glm::mat4 MV,P;
 glm::mat4 Rot;
 
+
+//delta time
+float dt = 0;
 //timing related variables
 float last_time=0, current_time=0;
 
@@ -381,7 +381,8 @@ void OnResize(int w, int h) {
 //idle callback function
 void OnIdle() {
 	//generate a rotation matrix to rotate on the Y axis each idle event
-	Rot = glm::rotate(glm::mat4(1), angle++, glm::vec3(0,1,0));
+	angle += dt;
+	Rot = glm::rotate(glm::mat4(1), angle, glm::vec3(0,1,0));
 
 	//handle the WSAD QZ key events to move the camera around
 	if( GetAsyncKeyState(VK_W) & 0x8000) {
